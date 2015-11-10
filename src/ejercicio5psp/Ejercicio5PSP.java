@@ -5,28 +5,44 @@
  */
 package ejercicio5psp;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author oracle
  */
 public class Ejercicio5PSP extends Thread {
 
+    static Ejercicio5PSP t1;
+    static Ejercicio5PSP t2;
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        new Ejercicio5PSP(1, "#1").start();
-        new Ejercicio5PSP(10, "#2").start();
+        t1 = new Ejercicio5PSP("hilo1");
+        t2 = new Ejercicio5PSP("hilo2");
+        t1.start();
+        t2.start();
     }
 
-    public Ejercicio5PSP(int prio, String nombre) {
+    public Ejercicio5PSP(String nombre) {
         super(nombre);
-        setPriority(prio);
     }
 
     @Override
     public void run() {
-        System.out.println("Hola, soy el hilo número " + getName());
+        if (getName().equalsIgnoreCase("hilo1")) {
+            try {
+                t2.join();
+                System.out.println("Hola, soy el hilo número " + getName());
+            } catch (InterruptedException ex) {
+                ;
+            }
+        } else {
+            System.out.println("Hola, soy el hilo número " + getName());
+        }
     }
 
 }
